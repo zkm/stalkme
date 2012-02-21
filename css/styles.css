@@ -1,0 +1,16 @@
+body{ margin:1.0em;  background:url("/images/bg-content.png") repeat #333;  font-family:Helvetica,Arial,FreeSans,sans-serif;  color:#000}
+h1{font-size:2.8em; color:#F6DD97; margin-bottom:3px; font-family: georgia; text-align: center;}
+h1 .small{font-size:0.4em}
+h1 a{text-decoration:none}
+h2{font-size:1.5em; color:#3908bc; clear:both}
+h3{text-align:center; color:#3908bc}
+a{color:#3908bc}
+ul li{list-style-type:none}
+
+#lifestream{ background:#333;  border-radius:7px;  color:#d4d4d4;  width:450px;  font-size:11px; margin:0 auto; border:solid 1px #f6dd97;-moz-box-shadow: 10px 10px 5px #000; -webkit-box-shadow: 10px 10px 5px #000; box-shadow: 10px 10px 5px #000;}
+#lifestream a{ color:#f6dd97;  text-decoration:none}
+#lifestream a:hover{ color:#fff5d8;  text-decoration:underline}
+#lifestream ul{ padding:10px}
+#lifestream li{ padding:5px 3px 5px 25px;  background-repeat:no-repeat;  background-position:left center}
+#lifestream li:hover{ color:#e9e9e9}
+#lifestream .timeago{ opacity:.5}

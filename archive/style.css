@@ -1,0 +1,54 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+body {
+	font-size: 62.5%;
+	font-family: Georgia, serif;
+}
+.floatLeft {
+	float: left;
+}
+.floatRight {
+	float: right;
+}
+.clear {
+	clear: both;
+}
+a {
+	outline: none;
+}
+img, a img {
+	border: none;
+}
+h1 {
+	font-weight: normal;
+}
+p {
+	font-weight: normal;
+	font-style: italic;
+	font-size: 1.5em;
+}
+#page-wrap {
+	min-width: 800px;
+}
+#twitter, #flickr, #scrnshots {
+	width: 25%;
+	float: left;
+	padding: 20px;
+	min-width: 200px;
+	text-align:center;
+}
+img.profile-pic {
+	float: left;
+	padding: 5px;
+}
+#flickr img, #scrnshots img, #twitter img {
+	width: 100px;
+	margin: 10px;
+}
+.tweet {
+	padding: 10px;
+	margin: 5px 0;
+	background: url(images/transpOrange25.png);
+}

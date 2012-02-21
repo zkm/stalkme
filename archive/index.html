@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>~ STALK ME [dot] ZachSchneider [dot] com ~</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<script type="text/javascript" src="js/jquery-1.2.6.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?ids=28084311@N06&lang=en-us&format=json&jsoncallback=?", function(data){
+	  $.each(data.items, function(index, item){
+		$("<img/>").attr("src", item.media.m).appendTo("#flickr")
+		  .wrap("<a href='" + item.link + "'></a>");
+	  });
+	});
+	
+	$.getJSON('http://twitter.com/status/user_timeline/zkm.json?count=10&callback=?', function(data){
+		$.each(data, function(index, item){
+			$('#twitter').append('<div class="tweet"><p>' + item.text.linkify() + '</p><p><strong>' + relative_time(item.created_at) + '</strong></p></div>');
+		});
+	
+	});
+	
+	/*$.getJSON("http://www.scrnshots.com/users/chriscoyier/screenshots.json?callback=?", function(screenshots){
+		$.each(screenshots, function(index, screenshot){
+			$("#scrnshots").append("<a href='" + screenshot.url + "'><img src='" + screenshot.images.small + "' /></a>");
+		});
+	});*/
+	
+	function relative_time(time_value) {
+	  var values = time_value.split(" ");
+	  time_value = values[1] + " " + values[2] + ", " + values[5] + " " + values[3];
+	  var parsed_date = Date.parse(time_value);
+	  var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+	  var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+	  delta = delta + (relative_to.getTimezoneOffset() * 60);
+	  
+	  var r = '';
+	  if (delta < 60) {
+		r = 'a minute ago';
+	  } else if(delta < 120) {
+		r = 'couple of minutes ago';
+	  } else if(delta < (45*60)) {
+		r = (parseInt(delta / 60)).toString() + ' minutes ago';
+	  } else if(delta < (90*60)) {
+		r = 'an hour ago';
+	  } else if(delta < (24*60*60)) {
+		r = '' + (parseInt(delta / 3600)).toString() + ' hours ago';
+	  } else if(delta < (48*60*60)) {
+		r = '1 day ago';
+	  } else {
+		r = (parseInt(delta / 86400)).toString() + ' days ago';
+	  }
+	  
+	  return r;
+	}
+	
+	String.prototype.linkify = function() {
+		return this.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&\?\/.=]+/, function(m) {
+			return m.link(m);
+		});
+	};
+
+});
+</script>
+</head>
+<body>
+<div id="page-wrap">
+<div style="text-align:center"><h1>Stalk Me!</h1></div>
+  <div id="flickr"><h3>Flickr</h3><br />
+  </div>
+  <div id="twitter"><h3>Twitter</h3><br />
+  </div>
+  <!--<div id="scrnshots"> <img src="images/header-scrnshots.jpg" alt="Visit me on Scrnshots!" style="width: 200px; float: none; display: block;" /><br />
+  </div>-->
+</div>
+</body>
+</html>
