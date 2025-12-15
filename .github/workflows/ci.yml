@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate HTML/CSS/JS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install linters
+        run: |
+          npm init -y
+          npm install --save-dev htmlhint stylelint @stylistic/stylelint-config eslint @eslint/js
+
+      - name: Create basic linter configs
+        run: |
+          echo '{
+            "extends": ["@eslint/js"],
+            "env": {"browser": true, "es2021": true},
+            "parserOptions": {"ecmaVersion": 12},
+            "rules": {
+              "no-unused-vars": "warn",
+              "no-undef": "warn",
+              "no-console": "off"
+            }
+          }' > eslint.config.json
+          echo '{
+            "extends": ["@stylistic/stylelint-config"],
+            "rules": {
+              "color-hex-length": "short",
+              "no-empty-source": null
+            }
+          }' > .stylelintrc.json
+          echo '{
+            "attr-no-dup": true,
+            "doctype-first": false,
+            "tagname-lowercase": false,
+            "id-class-value": false
+          }' > .htmlhintrc
+          echo '**/*.min.js\narchive/js/**\nsource/download/js/**' > .eslintignore
+          echo '**/*.min.css\narchive/css/**\nsource/download/css/**' > .stylelintignore
+
+      - name: Run ESLint
+        run: |
+          npx eslint . --ext .js || true
+
+      - name: Run Stylelint
+        run: |
+          npx stylelint "**/*.css" || true
+
+      - name: Run HTMLHint
+        run: |
+          npx htmlhint **/*.html || true
+
+  pages:
+    name: Build & Upload Pages artifact
+    runs-on: ubuntu-latest
+    needs: validate
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build legacy assets
+        run: |
+          if [ -f source/build/Makefile ]; then
+            make -C source/build all || make -C source/build
+          else
+            echo "No legacy Makefile found; skipping build"
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: pages
+    if: github.event_name != 'pull_request'
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
