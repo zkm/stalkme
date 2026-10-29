@@ -1,5 +1,10 @@
 # StalkMe (jQuery Lifestream)
 
+[![live demo](https://img.shields.io/website?url=https%3A%2F%2Fzkm.github.io%2Fstalkme%2F&label=live%20demo)](https://zkm.github.io/stalkme/)
+
+![jQuery plugin](https://img.shields.io/badge/jQuery-plugin-0769AD?logo=jquery&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+
 A simple static site bundling the jQuery Lifestream plugin and examples for generating an aggregated social activity stream from multiple services.
 
 This repo contains the plugin sources, service adapters, CSS, and several HTML demos under `source/` and the root. It’s suitable for viewing locally or hosting with GitHub Pages.
