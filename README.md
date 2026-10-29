@@ -1,5 +1,6 @@
 # StalkMe (jQuery Lifestream)
 
+[![CI](https://github.com/zkm/stalkme/actions/workflows/ci.yml/badge.svg)](https://github.com/zkm/stalkme/actions/workflows/ci.yml)
 [![live demo](https://img.shields.io/website?url=https%3A%2F%2Fzkm.github.io%2Fstalkme%2F&label=live%20demo)](https://zkm.github.io/stalkme/)
 
 ![jQuery plugin](https://img.shields.io/badge/jQuery-plugin-0769AD?logo=jquery&logoColor=white)

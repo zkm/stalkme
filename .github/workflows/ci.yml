@@ -9,9 +9,8 @@ on:
 
 jobs:
   validate:
-    name: Validate HTML/CSS/JS
+    name: Syntax check (HTML, CSS, JS)
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -19,52 +18,20 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
-      - name: Install linters
-        run: |
-          npm init -y
-          npm install --save-dev htmlhint stylelint @stylistic/stylelint-config eslint @eslint/js
+      # Only this repo's own files; vendored jQuery is left alone.
+      - name: JavaScript parses
+        run: for f in jquery.lifestream.js; do node --check "$f"; done
 
-      - name: Create basic linter configs
+      # No style rules, so only CSS syntax errors fail the build.
+      - name: CSS parses
         run: |
-          echo '{
-            "extends": ["@eslint/js"],
-            "env": {"browser": true, "es2021": true},
-            "parserOptions": {"ecmaVersion": 12},
-            "rules": {
-              "no-unused-vars": "warn",
-              "no-undef": "warn",
-              "no-console": "off"
-            }
-          }' > eslint.config.json
-          echo '{
-            "extends": ["@stylistic/stylelint-config"],
-            "rules": {
-              "color-hex-length": "short",
-              "no-empty-source": null
-            }
-          }' > .stylelintrc.json
-          echo '{
-            "attr-no-dup": true,
-            "doctype-first": false,
-            "tagname-lowercase": false,
-            "id-class-value": false
-          }' > .htmlhintrc
-          echo '**/*.min.js\narchive/js/**\nsource/download/js/**' > .eslintignore
-          echo '**/*.min.css\narchive/css/**\nsource/download/css/**' > .stylelintignore
+          echo '{"rules":{}}' > "$RUNNER_TEMP/stylelint.json"
+          npx --yes stylelint@16 --config "$RUNNER_TEMP/stylelint.json" css/lifestream.css css/styles.css
 
-      - name: Run ESLint
-        run: |
-          npx eslint . --ext .js || true
-
-      - name: Run Stylelint
-        run: |
-          npx stylelint "**/*.css" || true
-
-      - name: Run HTMLHint
-        run: |
-          npx htmlhint **/*.html || true
+      - name: HTML is well-formed
+        run: npx --yes htmlhint@1 index.html
 
   pages:
     name: Build & Upload Pages artifact
